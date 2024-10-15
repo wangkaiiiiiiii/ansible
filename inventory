@@ -1,0 +1,42 @@
+[k8s-master]
+10.129.130.235 hostname=k8s-master
+
+[k8s-node1]
+10.129.130.236 hostname=k8s-node1
+
+[k8s-cluster:children]
+k8s-master
+k8s-node1
+
+[harbor-nfs]
+10.129.130.237 hostname=harbor-nfs
+
+[mysql]
+10.129.130.239 hostname=mysql
+
+[mysql-master]
+192.168.1.2 hostname=mysql-master
+
+[mysql-slave]
+192.168.1.3 hostname=mysql-slave
+
+[iotdb]
+10.129.130.238 hostname=iotdb
+
+[clickhouse]
+10.129.130.240 hostname=clickhouse
+
+[redis-meqx]
+10.129.130.241 hostname=redis-meqx
+
+[monitor]
+10.129.130.242 hostname=monitor
+
+[docker:children]
+harbor-nfs
+redis-meqx
+monitor
+
+[jdk:children]
+iotdb
+monitor

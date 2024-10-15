@@ -1,0 +1,31 @@
+---
+- name: 获取node节点密钥并将该密钥分发到master节点
+  hosts: k8s-node1
+  tasks:
+    - name: 确保控制节点存在密钥
+      delegate_to: localhost
+      file:
+        path: /tmp/ssh_keys
+        state: directory
+        mode: '0700'
+
+    - name: 从node节点获取密钥
+      fetch:
+        src: /root/.ssh/id_rsa.pub
+        dest: /tmp/ssh_keys/id_rsa.pub
+        flat: yes
+
+- name: 将密钥分发给master节点
+  hosts: k8s-master
+  tasks:
+    - name: 从控制节点读取密钥内容
+      delegate_to: localhost
+      slurp:
+        src: /tmp/ssh_keys/id_rsa.pub
+      register: public_key
+
+    - name: 在master节点设置授权密钥
+      authorized_key:
+        user: "root"
+        state: present
+        key: "{{ public_key['content'] | b64decode }}"

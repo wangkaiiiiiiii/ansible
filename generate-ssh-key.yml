@@ -1,0 +1,29 @@
+---
+- name: 生成SSH密钥
+  hosts: localhost  # 仅在本地执行
+  become: true  # 确保以sudo root身份执行任务
+  gather_facts: true
+  tasks:
+    - name: 确保.ssh目录存在
+      file:
+        path: "{{ lookup('env', 'HOME') }}/.ssh"
+        state: directory
+        mode: '0700'
+
+    - name: 检查SSH密钥是否已存在
+      stat:
+        path: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
+      register: keyfile_stat
+
+    - name: 生成SSH密钥对
+      when: keyfile_stat.stat.exists == false
+      openssh_keypair:
+        path: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
+        type: rsa
+        size: 2048
+      register: keypair_result
+
+    - name: 打印SSH密钥对信息
+      debug:
+        var: keypair_result
+
