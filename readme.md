@@ -8,7 +8,7 @@
 
 ```sh
 [ssh]
-39.106.60.199
+123.56.181.33
 ```
 
 ```sh
@@ -18,4 +18,5 @@ BECOME password[defaults to SSH password]: zatAmqwRf9dYRFN
 ```
 ```sh
 [root@test 1_配置SSH]# ansible-playbook node-master.yaml
+
 ```
